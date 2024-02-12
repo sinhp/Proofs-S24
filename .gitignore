@@ -1,0 +1,8 @@
+/build
+/lake-packages/*
+/.vscode
+/.cache
+.DS_Store
+.lake/packages/Qq/
+*.lock
+/.lake/*
