@@ -1,5 +1,5 @@
 /- Copyright (c) Heather Macbeth, 2023.  All rights reserved. -/
-import Library.Theory.ModEq.Defs
+import ProofsS24.Theory.ModEq.Defs
 import Mathlib.Tactic.Linarith
 
 open Lean hiding Rat mkRat

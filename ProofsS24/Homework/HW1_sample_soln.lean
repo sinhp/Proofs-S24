@@ -1,5 +1,5 @@
---import ProofsS24.Tactic.Addarith
---import ProofsS24.Tactic.Numbers
+import ProofsS24.Tactic.Addarith
+--import ProofsS24.Tactic.Numbers.Basic
 --import ProofsS24.Tactic.Use
 
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
