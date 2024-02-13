@@ -19,14 +19,14 @@ This tactic is a deliberately weakened version of the Mathlib tactic `linarith`.
 open Lean Elab Tactic
 open Parser Tactic Syntax
 
-syntax (name := addarith) "addarith" (" [" term,* "]")? : tactic
+syntax (name := addarith) "addarith" " [" term,* "]" : tactic
 
 open Elab.Tactic Parser.Tactic
 open Mathlib Tactic Abel
 
 def addarithDischarger : TacticM Unit := do
   try evalTactic (← `(tactic| simp (config := { decide := false }) only [one_mul, neg_mul])) catch _ => pure ()
-  abelNFTarget {}
+  abelNFTarget (← IO.mkRef {}) {}
   try evalTactic (← `(tactic| push_cast (config := { decide := false }) [zsmul_eq_mul])) catch _ => pure ()
   try evalTactic (← `(tactic| norm_num1)) catch _ => pure ()
 
@@ -40,12 +40,9 @@ An example:
 example {a b : ℤ} (h : a = 10 - b) : a + b ≤ 12 := by addarith [h]
 ```
 -/
-elab_rules : tactic | `(tactic| addarith $[[$args,*]]?) => withMainContext do
+elab_rules : tactic | `(tactic| addarith [$args,*]) => withMainContext do
   (liftMetaFinishingTactic <|
-    Linarith.linarith true
-      (← ((args.map (TSepArray.getElems)).getD {}).mapM (elabTerm ·.raw none)).toList
-      { discharger := addarithDischarger })
+    Linarith.linarith (only_on := true)
+      (← args.getElems.mapM (elabTerm ·.raw none)).toList
+      { discharger := addarithDischarger, splitHypotheses := false })
   <|> throwError "addarith failed to prove this"
-
--- while we're at it, this turns off the succeed-with-noise behaviour of `ring_nf` with `ring`
-macro_rules | `(tactic| ring) => `(tactic| ring_nf)
