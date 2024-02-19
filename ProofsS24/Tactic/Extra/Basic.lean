@@ -1,5 +1,5 @@
 /- Copyright (c) Heather Macbeth, 2023.  All rights reserved. -/
-import Library.Tactic.Extra.Attr
+import ProofsS24.Tactic.Extra.Attr
 import Mathlib.Tactic.Positivity
 
 /- # `extra` tactic

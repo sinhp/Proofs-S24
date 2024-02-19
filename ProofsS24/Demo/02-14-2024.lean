@@ -11,7 +11,7 @@ example {a b : ℝ} (h₁ : a - 5 * b = 4) (h₂ : b + 2 = 3) : a = 9 := by
          _ = 1 := by ring --sorry  -- addarith [h₂]
   -- substitute `1` for `b` into `h₁`
   rw [h₃] at h₁
-  have h₄ : a = 9 := by sorry
+  have h₄ : a = 9 := by addarith [h₁]
   exact h₄
 
 
@@ -47,19 +47,23 @@ example {m n : ℤ} (h1 : m + 3 ≤ 2 * n - 1) (h2 : n = 5) : m ≤ 6 := by
 
 #check mul_le_mul_left
 
+example : 0 < 2 := by
+  trivial
+
 example {a b : ℚ} : a ≤ b → 2 * a ≤ 2 * b := by
   intro h
-  exact (mul_le_mul_left rfl).mpr h
+  exact (mul_le_mul_left (by trivial)).mpr h
 
 example {m n : ℤ} (h1 : m + 3 ≤ 2 * n - 1) (h2 : n ≤ 5) : m ≤ 6 := by
-  have h3 : 2 * n ≤ 10 := by sorry -- maybe use `mul_le_mul_left`
+  have h3 : 2 * n ≤ 10 := by
+    exact (mul_le_mul_left (by trivial)).mpr h2
   have h4 : 2 * n - 1 ≤ 9 := by addarith [h3]
-  have h5 : m + 3 ≤ 9 := by
-    apply le_trans
-    exact h1
-    exact h4
+  have h5 : m + 3 ≤ 9 := by addarith [h1, h4]
+    -- apply le_trans
+    -- exact h1
+    -- exact h4
   -- addarith works for proving inequlaities as well as long as we use additive method (addition, subtraction)
-  sorry
+  addarith [h5]
 
 
 example {t : ℝ} (h1 : t ^ 2 = 3 * t) (h2 : t ≥ 1) : t ≥ 2 := by

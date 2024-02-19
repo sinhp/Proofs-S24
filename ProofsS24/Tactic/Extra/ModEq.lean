@@ -1,6 +1,6 @@
 /- Copyright (c) Heather Macbeth, 2023.  All rights reserved. -/
-import Library.Theory.ModEq.Lemmas
-import Library.Tactic.Extra.Basic
+import ProofsS24.Theory.ModEq.Lemmas
+import ProofsS24.Tactic.Extra.Basic
 
 attribute [aesop safe (rule_sets [extra]) (apply (transparency := instances))]
   Int.modEq_fac_zero Int.modEq_fac_zero' Int.modEq_zero_fac Int.modEq_zero_fac'

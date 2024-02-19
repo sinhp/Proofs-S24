@@ -1,3 +1,3 @@
-import Library.Tactic.Extra.ModEq
-import Library.Tactic.Numbers.ModEq
-import Library.Tactic.ModCases
+import ProofsS24.Tactic.Extra.ModEq
+import ProofsS24.Tactic.Numbers.ModEq
+import ProofsS24.Tactic.ModCases
