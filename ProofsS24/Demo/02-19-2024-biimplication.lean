@@ -102,13 +102,74 @@ If `⊢ P ∨ Q` is our goal, then
 The elimination rule for disjunction (`∨`) is slightly more complicated. Let's think about it: suppose we know that `P ∨ Q` is true; of course this does not tell us which is the case: that we `P` is true or whether `Q` is true. All we know is that at least one of them is true. So, if we want to prove some other proposition `R` we should prove that `R` follows from `P` and that `R` follows from `Q`. In other words, it is a proof by cases.
 
 
- P ∨ Q     P        Q
-            .        .
-            .        .
-            .        .
-            R        R
+ hpq : P ∨ Q     P        Q
+                .        .
+                .        .
+                .        .
+                R        R
 ----------------------------
             R
 
-In the expression `Or.elim hpq hpr hqr`, the term `Or.elim` takes three arguments, `hpq : P ∨ Q`, `hpr : P → R` and `hqr : Q → R`, and produces a proof of `R`.
+The tactic `cases' hpq with hp hq` corresponds to disjunction elimination.
 -/
+
+
+/-
+The rules of deduction for existential quantifier
+
+m    P m
+------------- (intro rule for ∃)
+∃ n, P n
+
+the tactic corresponding to this rule is `use`
+
+              for an arbitrary m, P m
+                .
+                .
+∃ n, P n        R
+-------------------
+R
+
+-/
+
+
+
+/- The rules of deduction for existential quantifier are a more general case of the rules of deduction for disjunction. -/
+
+inductive Two where
+ | pos
+ | neg
+
+#check Two
+
+#check Two.pos
+#check Two.neg
+
+
+
+variable (P : Two → Prop) -- P(pos) , P (neg)
+
+example : (∃ t : Two, P t) ↔ P (Two.pos) ∨ P (Two.neg) := by
+  constructor
+  · intro h
+    cases' h with t ht
+    cases t with
+    | pos => exact Or.inl ht
+    | neg => exact Or.inr ht
+  . intro h
+    cases' h with h1 h2
+    · use Two.pos
+    · use Two.neg
+
+
+example : (∃ t : Two, P t) ↔ P (Two.pos) ∨ P (Two.neg) := by
+  constructor
+  · intro h
+    obtain ⟨t, ht⟩ := h -- cases' h with t ht
+    cases t with
+    | pos => exact Or.inl ht
+    | neg => exact Or.inr ht
+  . intro h
+    cases' h with h1 h2
+    · use Two.pos
+    · use Two.neg
