@@ -1,5 +1,5 @@
 /- Copyright (c) Heather Macbeth, 2022.  All rights reserved. -/
-import Library.Theory.ModEq.Defs
+import ProofsS24.Theory.ModEq.Defs
 import Mathlib.Tactic.GCongr.Core
 
 protected theorem Int.ModEq.refl (a : ℤ) : a ≡ a [ZMOD n] := ⟨0, by ring⟩
@@ -9,7 +9,7 @@ protected theorem Int.ModEq.add (h1 : a ≡ b [ZMOD n]) (h2 : c ≡ d [ZMOD n]) 
     a + c ≡ b + d [ZMOD n] := by
   obtain ⟨x, hx⟩ := h1
   obtain ⟨y, hy⟩ := h2
-  exact ⟨x + y, by linear_combination hx + hy⟩ 
+  exact ⟨x + y, by linear_combination hx + hy⟩
 
 @[gcongr]
 protected theorem Int.ModEq.add_left (h : a ≡ b [ZMOD n]) : c + a ≡ c + b [ZMOD n] :=
@@ -24,7 +24,7 @@ protected theorem Int.ModEq.sub (h1 : a ≡ b [ZMOD n]) (h2 : c ≡ d [ZMOD n]) 
     a - c ≡ b - d [ZMOD n] := by
   obtain ⟨x, hx⟩ := h1
   obtain ⟨y, hy⟩ := h2
-  exact ⟨x - y, by linear_combination hx - hy⟩ 
+  exact ⟨x - y, by linear_combination hx - hy⟩
 
 @[gcongr]
 protected theorem Int.ModEq.sub_left (h : a ≡ b [ZMOD n]) : c - a ≡ c - b [ZMOD n] :=
@@ -37,7 +37,7 @@ h.sub (Int.ModEq.refl _)
 @[gcongr]
 protected theorem Int.ModEq.neg (h1 : a ≡ b [ZMOD n]) : -a ≡ -b [ZMOD n] := by
   obtain ⟨x, hx⟩ := h1
-  exact ⟨-x, by linear_combination -hx⟩ 
+  exact ⟨-x, by linear_combination -hx⟩
 
 @[gcongr]
 protected theorem Int.ModEq.mul (h1 : a ≡ b [ZMOD n]) (h2 : c ≡ d [ZMOD n]) :
@@ -100,6 +100,6 @@ theorem Int.existsUnique_modEq_lt (a : ℤ) {b : ℤ} (hb : 0 < b) :
   obtain ⟨r, ⟨rpos, rlt, q, hq⟩, hr2⟩ := a.existsUnique_quotient_remainder b hb
   refine ⟨r, ⟨rpos, rlt, q, ?_⟩, ?_⟩ <;> dsimp at *
   . linear_combination hq
-  rintro r' ⟨rpos', rlt', q', hq'⟩ 
-  refine hr2 r' ⟨rpos', rlt', q', ?_⟩ 
+  rintro r' ⟨rpos', rlt', q', hq'⟩
+  refine hr2 r' ⟨rpos', rlt', q', ?_⟩
   linear_combination hq'

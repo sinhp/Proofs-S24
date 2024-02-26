@@ -3,7 +3,7 @@ Copyright (c) 2022 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Heather Macbeth
 -/
-import Library.Theory.ModEq.Lemmas
+import ProofsS24.Theory.ModEq.Lemmas
 
 /-! # `mod_cases` tactic
 
@@ -37,7 +37,7 @@ The actual mathematical content of the proof is here.
   refine ⟨Nat.zero_le _, ?_, ?_⟩
   · rw [Int.toNat_lt nonneg]; exact Int.emod_lt_of_pos _ this
   · rw [Int.ModEq, Int.toNat_of_nonneg nonneg]
-    exact ⟨a / n, by linear_combination - a.emod_add_ediv n⟩ 
+    exact ⟨a / n, by linear_combination - a.emod_add_ediv n⟩
 
 /--
 The end point is that once we have reduced to `∃ z, n ≤ z < n ∧ a ≡ z (mod n)`
