@@ -85,3 +85,56 @@ example (n : ℤ) : Even n ∨ Odd n := by
     rw [Int.even_iff_modEq]
     apply hn
   · sorry
+
+lemma three_divides_cube_sub_self {x : ℤ} : 3 ∣ x^3 - x := by
+  change ∃ k, x^3 - x = 3 * k
+  have : x^3 - x = x * (x - 1) * (x + 1) := by
+    calc
+      x^3 - x = x * (x^2 - 1) := by ring
+      _ = x * (x - 1) * (x + 1) := by ring
+
+
+lemma mod_equiv_divide {x : ℤ} : x ^ 3 ≡ x [ZMOD 3] ↔ 3 ∣ x^3 - x := by
+  sorry
+
+example {x : ℤ} : x ^ 3 ≡ x [ZMOD 3] := by
+  apply mod_equiv_divide.mpr
+  exact three_divides_cube_sub_self
+
+
+example (x : ℤ) (h : x ≡ 0 [ZMOD 3]): (x^3 ≡ 0 [ZMOD 3]) := by
+  change 3 ∣ x^3 - 0
+  obtain ⟨k, hk⟩ := h
+  rw [sub_zero] at hk
+  use 9 * k^3
+  rw [hk]
+  ring_nf
+
+example (h : x ≡ 0 [ZMOD 3]) : 0 ≡ x [ZMOD 3] := by
+  obtain ⟨k, hk⟩ := h
+  change ∃ k', 0 - x = 3 * k'
+  have : 0 - x = 3 * (-k) := by
+    calc
+      0 - x = - (x - 0) := by ring
+            _     = - (3 * k) := by rw [hk]
+            _     = 3 * (-k) := by ring
+  use -k
+
+--
+example {x : ℤ} : x ^ 3 ≡ x [ZMOD 3] := by
+  -- by proving the goal in three different subgoals which exhaust all possibilities
+  -- for `x`: either `x= 3*k` or `x =3 *k +1` or `x = 3*k + 2`
+  mod_cases hx : x % 3
+  calc
+    x ^ 3 ≡ 0 ^ 3 [ZMOD 3] := by rel [hx]
+    _ = 0 := by ring
+    _ ≡ x [ZMOD 3] := by rel [hx]
+  calc
+    x ^ 3 ≡ 1 ^ 3 [ZMOD 3] := by rel [hx]
+    _ = 1 := by sorry
+    _ ≡ x [ZMOD 3] := by rel [hx]
+  calc
+    x ^ 3 ≡ 2 ^ 3 [ZMOD 3] := by rel [hx]
+    _ = 2 + 3 * 2 := by sorry
+    _ ≡ 2 [ZMOD 3] := by sorry
+    _ ≡ x [ZMOD 3] := by rel [hx]
