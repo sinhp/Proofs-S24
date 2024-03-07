@@ -12,3 +12,5 @@ require mathlib from git
 lean_lib «ProofsS24» {
   -- add any library configuration options here
 }
+
+require Duper from git "https://github.com/hrmacbeth/duper" @ "main"

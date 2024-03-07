@@ -1,6 +1,6 @@
 /- Copyright (c) Heather Macbeth, 2023.  All rights reserved. -/
 import Mathlib.Tactic.LinearCombination
-import Library.Tactic.Induction
+import ProofsS24.Tactic.Induction
 
 open Int
 
@@ -9,7 +9,7 @@ open Int
   linarith
 
 @[decreasing] theorem lower_bound_fmod2 (a b : ℤ) (h1 : b < 0) : b < fmod a (-b) := by
-  have H : 0 ≤ fmod a (-b) 
+  have H : 0 ≤ fmod a (-b)
   · apply fmod_nonneg_of_pos
     linarith
   linarith
@@ -50,7 +50,7 @@ theorem gcd_dvd_right (a b : ℤ) : _root_.gcd a b ∣ b := by
     linarith
   · use 0
     linarith
-    
+
 theorem gcd_dvd_left (a b : ℤ) : _root_.gcd a b ∣ a := by
   rw [_root_.gcd]
   split_ifs with h1 h2
@@ -79,8 +79,8 @@ def L (a b : ℤ) : ℤ :=
   if 0 < b then
     R b (fmod a b)
   else if b < 0 then
-    R b (fmod a (-b)) 
-  else if 0 ≤ a then 
+    R b (fmod a (-b))
+  else if 0 ≤ a then
     1
   else
     -1
@@ -112,4 +112,4 @@ termination_by L_mul_add_R_mul a b => b
 end Bezout
 open Bezout
 
-theorem bezout (a b : ℤ) : ∃ x y : ℤ, x * a + y * b = _root_.gcd a b := ⟨_, _, L_mul_add_R_mul _ _⟩ 
+theorem bezout (a b : ℤ) : ∃ x y : ℤ, x * a + y * b = _root_.gcd a b := ⟨_, _, L_mul_add_R_mul _ _⟩

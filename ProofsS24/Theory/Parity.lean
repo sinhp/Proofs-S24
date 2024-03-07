@@ -1,6 +1,6 @@
 /- Copyright (c) Heather Macbeth, 2022.  All rights reserved. -/
 import Mathlib.Tactic.IntervalCases
-import Library.Theory.Division
+import ProofsS24.Theory.Division
 
 def Int.Even (n : ℤ) : Prop :=
   ∃ k, n = 2 * k
@@ -21,7 +21,7 @@ theorem Int.odd_iff_not_even (n : ℤ) : Odd n ↔ ¬ Even n := by
     contradiction
   · intro h
     obtain h1 | h2 := Int.even_or_odd n
-    · contradiction   
+    · contradiction
     · apply h2
 
 theorem Int.even_iff_not_odd (n : ℤ) : Even n ↔ ¬ Odd n := by
@@ -33,7 +33,7 @@ theorem Int.even_iff_not_odd (n : ℤ) : Even n ↔ ¬ Odd n := by
   · intro h
     obtain h1 | h2 := Int.even_or_odd n
     · apply h1
-    · contradiction   
+    · contradiction
 
 def Nat.Even (n : ℕ) : Prop :=
   ∃ k, n = 2 * k
@@ -55,7 +55,7 @@ theorem Nat.odd_iff_not_even (n : ℕ) : Odd n ↔ ¬ Even n := by
     contradiction
   · intro h
     obtain h1 | h2 := Nat.even_or_odd n
-    · contradiction   
+    · contradiction
     · apply h2
 
 theorem Nat.even_iff_not_odd (n : ℕ) : Even n ↔ ¬ Odd n := by
@@ -68,4 +68,4 @@ theorem Nat.even_iff_not_odd (n : ℕ) : Even n ↔ ¬ Odd n := by
   · intro h
     obtain h1 | h2 := Nat.even_or_odd n
     · apply h1
-    · contradiction   
+    · contradiction

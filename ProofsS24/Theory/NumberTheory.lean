@@ -1,16 +1,16 @@
 /- Copyright (c) Heather Macbeth, 2023.  All rights reserved. -/
-import Library.Theory.Parity
+import ProofsS24.Theory.Parity
 
 /-! # Assorted number theory lemmas from earlier needed in section 7.3 (square root of 2) -/
 
 -- from Section 2.3
-theorem sq_ne_two (n : ℤ) : n ^ 2 ≠ 2 := by 
+theorem sq_ne_two (n : ℤ) : n ^ 2 ≠ 2 := by
   intro hn
   obtain ⟨hn1, hn2⟩ : -2 < n ∧ n < 2
   · apply abs_lt_of_sq_lt_sq'
     · linarith
     · norm_num
-  interval_cases n <;> norm_num at hn 
+  interval_cases n <;> norm_num at hn
 
 -- from Section 6.1
 theorem Nat.Odd.pow {a : ℕ} (ha : Nat.Odd a) (n : ℕ) : Nat.Odd (a ^ n) := by
