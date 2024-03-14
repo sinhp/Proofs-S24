@@ -48,7 +48,7 @@ def f : Bit → ℕ
 instance : LE 𝟚 where
   le := fun a b => a = one → b = one
 
--- ≤ is automatically generated becasue we just constructed an instance of an order on the type `𝟚`.
+-- The notation `≤` is automatically generated becasue we just constructed an instance of an order on the type `𝟚`.
 
 @[simp]
 lemma le_one {a : 𝟚} : a ≤ one := by
