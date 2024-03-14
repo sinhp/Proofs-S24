@@ -73,6 +73,13 @@ def mk (a : ℕ → 𝟚) : ℕ → 𝟚
   | 0 => a 0
   | n + 1 => min (a (n + 1)) (mk a n)
 
+lemma mk_zero {a : ℕ → 𝟚} : (mk a) 0 = a 0 := by
+  rfl
+
+lemma mk_succ {a : ℕ → 𝟚} :  (mk a) (n + 1) = min (a (n + 1)) (mk a n) := by
+  rfl
+
+
 #check mk evenOddSeq
 #eval evenOddSeq 1
 #eval (mk evenOddSeq) 1
