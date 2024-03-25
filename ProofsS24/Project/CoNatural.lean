@@ -3,7 +3,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Author: Sina Hazratpour.
 -/
 
-import Mathlib.Tactic
 import ProofsS24.Project.Bit
 import ProofsS24.Project.Decreasing
 
@@ -40,7 +39,7 @@ lemma le_infinity {β : ℕ[∞]} : β ≤ infinity := by
 /-- We can construct from a binary sequence a co-natural number. -/
 def ofBinSeq (β : ℕ → 𝟚) : ℕ[∞] := ⟨Decreasing.mk β, Decreasing.mk_is_decreasing β⟩
 
-
+def ofNat (n : ℕ) : ℕ[∞] :=  ⟨binSeqOf n, binSeqOf_decreasing n⟩
 
 
 

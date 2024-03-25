@@ -78,10 +78,9 @@ lemma iff_zero_of_exists_prior_zero {a : ℕ → 𝟚} :
     apply le_zero_eq_zero hj
   · sorry
 
-/-
-
--/
-
+/-- The binary sequence `binSeqOf n` is decreasing. -/
+lemma binSeqOf_decreasing (n : ℕ) : Decreasing (binSeqOf n) := by
+  sorry
 
 /-- Given a sequence we construct a decreasing sequence recursively. -/
 def mk (a : ℕ → 𝟚) : ℕ → 𝟚

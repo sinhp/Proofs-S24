@@ -3,123 +3,130 @@ import ProofsS24.Tactic.Addarith
 import ProofsS24.Tactic.Cancel
 import ProofsS24.Tactic.ModCases
 
-/-- Outcomes of a game of rock-paper-scissors:
-https://en.wikipedia.org/wiki/Rock_paper_scissors
--/
-inductive Hand
-  | rock
-  | paper
-  | scissors
+import Mathlib.Data.Real.Basic
 
-#check Hand.rock
-#check Hand.paper
-#check Hand.scissors
+open Function
 
-namespace Hand
+-- A function from reals to reals which assigns to every `x : ℝ` the value `abs (x - 1)`.
+def adhoc_fun : ℝ → ℝ := fun (x : ℝ) ↦ abs (x - 1)
 
-/-- For outcomes `a` and `b` in a game of rock-paper-scissors, we say `beats a b` if `a` beats `b`. -/
-@[reducible]
-def beats : Hand → Hand → Prop
-  | rock, scissors => True -- rock beats scissors
-  | scissors, paper => True -- scissors beats paper
-  | paper, rock => True -- paper beats rock
-  | _, _ => False -- otherwise, it's a loss or a tie (e.g. rock doesn't beat rock).
+def adhoc_fun' : ℝ → ℝ := fun x  ↦ abs (x - 1)
 
-example : ¬ Reflexive beats := by
-  dsimp [Reflexive]
-  push_neg
-  use rock
-  trivial
+def adhoc_fun'' := fun (x : ℝ)  ↦ abs (x - 1)
 
-example : ¬ Symmetric beats := by
-  dsimp [Symmetric]
-  push_neg
-  use rock
-  use scissors
-  trivial
+def adhoc_fun''' := fun x  ↦ abs ((x : ℝ) - 1)
 
-example : ¬ Transitive beats := by
-  dsimp [Transitive]
-  push_neg
-  use scissors
-  use paper
-  use rock
-  trivial
+def adhoc_fun'''' : ℕ → ℝ := fun x ↦ abs ( (x : ℝ) - 1)
+
+#check @adhoc_fun'''
+#check @adhoc_fun''''
+
+-- equality of functions
+section
+-- Function extensionality says that two functions `f` and `g` are equal if they assign the same output `f x` and `g x`  to each input `x`.
+example {f g : X → Y} (h: ∀ x, f x = g x) : f = g := by
+  funext x
+  exact (h x)
+end
+
+example : adhoc_fun = adhoc_fun' := by
+  -- let `i` be an arbitrary real number
+  funext i
+  -- we show that `adhoc_fun i = adhoc_fun' i`.
+  -- unfold adhoc_fun
+  -- unfold adhoc_fun'
+  -- rfl
+  simp only [adhoc_fun, adhoc_fun']
+
+--`adhoc_fun = adhoc_fun''''` is not even wrong, but meaningless.
+-- example : adhoc_fun = adhoc_fun'''' := by sorry
 
 
-example : ∀ (x : Hand), ∃ (y : Hand), beats x y := by
-  intro x
-  cases x
-  use scissors
-  use scissors
-  use paper
+-- We can use function composition to break down a function into simpler pieces:
 
+#check abs
+def minus_one := fun (x : ℝ) ↦ (x - 1)
 
+example : adhoc_fun = fun x => abs (minus_one x) := by
+  funext i
+  rfl
 
-#check Fin -- `Fin n` is the type whose elements are natural numbers smaller than `n`.
+#check @minus_one
+#check @abs (α := ℝ)
 
-#check Fin 12
-
-def ahead : Fin 12 → Fin 12 → Prop := fun a b => b < a
-
-#check (12 : Fin 12) -- `Fin 12` is the type whose elements are natural numbers smaller than `12`.
-#reduce (12 : Fin 12)
-
-example : ahead 11 12 := by dsimp [ahead]; trivial
-
-example : ahead 11 12 := by simp [ahead]
-
-#synth LE (Fin 4)
-
-example : (12 : Fin 12) ≤ 11 := by trivial
-
-example : ¬ Reflexive ahead := by
-  dsimp [Reflexive, ahead]
-  push_neg
-  use 0
-  trivial
-
-example : ¬ Symmetric ahead := by
-  dsimp [Symmetric, ahead]
-  push_neg
-  use 1
-  use 0
-  trivial
-
-example : Transitive ahead := by
-  dsimp [Transitive, ahead]
-  intro a b c
-  intro h1 h2
-  obtain ⟨a, ha⟩ := a
-  obtain ⟨b, hb⟩ := b
-  obtain ⟨c, hc⟩ := c
-  simp at *
-  exact h2.trans h1
-
--- local infix:50 " ≺ " => beats
-
-/-- Putting a less-than relation on the hand outcomes.
-This instance makes the notation `<` available.    -/
-instance : LT Hand where
-  lt a b := beats b a
-
-instance : LE Hand where
-  le a b := a = b ∨ beats b a
-
-example : scissors < rock := by trivial
-
-example : scissors ≤ rock := by
-  right
-  trivial
+-- (f ∘ g) (i) = f (g i)
+example : adhoc_fun = abs ∘ minus_one := by
+  funext i
+  dsimp
+  rfl
 
 
 
+#check LeftInverse
+#check @id
 
 
+section
+variable {f : X → Y} {g : Y → X}
+#check LeftInverse f g -- `f` is a left inverse of `g`, i.e. `∀ y, f ( g y ) = y` equationally, and diagramatically
+-- Y --g--> X --f--> Y = Y -- id --> Y
+#check Function.RightInverse f g -- means `g (f x) = x for all x`,
+end
 
--- https://en.wikipedia.org/wiki/Rock_paper_scissors#Additional_weapons
+example {f : X → Y} {g : Y → X} :  LeftInverse f g ↔ (f ∘ g = id) := by
+  constructor
+  · -- let's suppose that `f` is a left inverse of `g`
+    intro h
+    simp [Function.LeftInverse] at h
+    funext y
+    dsimp
+    --exact h y
+    -- apply h
+    specialize h y
+    assumption
+  · intro h
+    simp [Function.LeftInverse]
+    intro x
+    -- we want to eliminate function equality
+    have : ∀ y, (f ∘ g) y = y := by
+      -- `simp_rw` is like `rw` but applies under binders.
+      simp_rw [h]
+      simp only [id_eq]
+      simp [implies_true]
+    exact this x
 
 
+example {f : X → Y} {g : Y → X} : RightInverse g f ↔ ∀ y : Y, f (g y) = y := by
+  unfold Function.RightInverse
+  unfold Function.LeftInverse
+  rfl
+
+example {f : X → Y} {g : Y → X} : RightInverse g f ↔ ∀ y : Y, f (g y) = y := by
+  apply Iff.intro
+  · intro h y
+    simp [Function.RightInverse, Function.LeftInverse] at h
+    apply h y
+  · intro h
+    exact h
 
 
-end Hand
+-- function defined by recursion.
+def F : ℕ → ℤ
+  | 0 => 1 -- `F 0` is defined to be `1`
+  | 1 => 1 -- `F 1` is defined to be `1`
+  | n + 2 => F (n + 1) + F n -- the recursive part, `F (n + 2)` is defined to be `F (n + 1) + F n `.
+
+example : F 5 = 8 := by
+ -- F 5 = F (4 + 3) = F 4 + F 3
+  rw [F]
+  rw [F, F]
+  iterate {rw [F]}
+  rfl
+
+example : F 5 = 8 := by
+  rfl
+
+
+-- sum of squares of consecutive fibonacci numbers
+example {n : ℕ} : (F n)^2 + (F (n + 1))^2 = F (2 * n + 1) := by
+  sorry
