@@ -86,7 +86,7 @@ Suppose `M` is an additive commutative monoid. This means that `M` is a type wit
 - a property that `+` is commutative: `∀ a b : M, a + b = b + a`
 
 
-We say a sequence `f : ℕ → M` is __periodic__ if there exist some `T` such that for all `n ≥ T`, `f (n + T) = f n`.  Show that if `f` and `g` are eventually periodic, then so is `f + g`.
+We say a sequence `f : ℕ → M` is __periodic__ if there exist some nonzero `T`, called the period of the function, such that for all `n`, we have `f (n + T) = f n`.  Show that if `f` and `g` are eventually periodic sequences, then so is their sum `f + g`.
 -/
 
 variable {M : Type*} [AddCommMonoid M]
