@@ -44,6 +44,9 @@ def oneSeq : BinSeq := fun _ => one
 @[simp]
 def evenOddSeq (n : ℕ) : 𝟚 := if n % 2 = 0 then zero else one
 
+
+def BinSeq.cons (b : Bit) (α : BinSeq) : BinSeq := fun n => if n = 0 then b else α (n - 1)
+
 /-- A sequence is decreasing if the value at each index is greater than or equal to the value at the next index. -/
 def Decreasing (a : ℕ → 𝟚) := ∀ n, a (n + 1) ≤ a n
 
@@ -114,5 +117,10 @@ lemma mk_mk_eq_mk {a : ℕ → 𝟚} : mk (mk a) = mk a := by
     rfl
   | succ n ih =>
     sorry
+
+lemma cons (b : Bit) (a : ℕ → 𝟚) (h : Decreasing a) : Decreasing (BinSeq.cons b a) := by
+  sorry
+
+
 
 end Decreasing

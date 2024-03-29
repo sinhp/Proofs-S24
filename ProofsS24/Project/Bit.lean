@@ -37,6 +37,19 @@ scoped notation "𝟚" => Bit
 lemma zero_ne_one : zero ≠ one := by
   exact Bit.noConfusion
 
+#check Bit.ofNat
+
+instance : OfNat Bit n where
+  ofNat := Bit.ofNat n
+
+#check (0 : Bit)
+
+example : (0 : Bit) = zero := by
+  rfl
+
+example : (1 : Bit) = one := by
+  rfl
+
 /-- To define a function out of `Bit` it is sufficient to define the values of the function on the constructors of `Bit`. -/
 def f : Bit → ℕ
   | zero => 1

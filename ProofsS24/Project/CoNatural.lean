@@ -32,14 +32,42 @@ lemma BinSeq_le (α β : ℕ → 𝟚) : α ≤ β ↔ ∀ n, α n ≤ β n := b
 lemma CoNat_le (α β : ℕ[∞]) : α ≤ β ↔ ∀ n, α.1 n ≤ β.1 n := by
   rfl
 
-lemma le_infinity {β : ℕ[∞]} : β ≤ infinity := by
-  intro n
+example : ¬ ∃ n : ℕ, ∀ m : ℕ, m ≤ n := by
+  intro h
+  obtain ⟨N,h⟩ := h
+  specialize h (N+1)
+  linarith
+
+lemma le_infinity : ∀ β : ℕ[∞], β ≤ infinity := by
+  intro β n
   exact le_one
 
-/-- We can construct from a binary sequence a co-natural number. -/
+/-- We can construct from a binary sequence a co-natural number by forcing it to be decreasing using the function `Decreasing.mk`. -/
 def ofBinSeq (β : ℕ → 𝟚) : ℕ[∞] := ⟨Decreasing.mk β, Decreasing.mk_is_decreasing β⟩
 
+lemma ofBinSeq_left_inverse (α : ℕ[∞]) : ofBinSeq α  = α := by
+  sorry
+
+/-- The canonical embedding of ℕ into ℕ[∞]. -/
 def ofNat (n : ℕ) : ℕ[∞] :=  ⟨binSeqOf n, binSeqOf_decreasing n⟩
+
+def succ (n : ℕ[∞]) : ℕ[∞] := match n with
+| ⟨α, h⟩ =>  ⟨BinSeq.cons one α, Decreasing.cons one α h⟩
+
+lemma succ_le (n : ℕ[∞]) : n ≤ succ n := by
+  sorry
+
+lemma succ_lt (n : ℕ[∞]) : n < succ n := by
+  sorry
+
+lemma succ_ne_zero (n : ℕ[∞]) : succ n ≠ 0 := by
+  sorry
+
+lemma succ_injective : ∀ n m : ℕ[∞], succ n = succ m → n = m := by
+  sorry
+
+lemma succ_pos (n : ℕ[∞]) : 0 < succ n := by
+  sorry
 
 
 
