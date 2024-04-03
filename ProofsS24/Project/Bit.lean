@@ -91,7 +91,17 @@ lemma le' {a b : 𝟚} : a ≤ b ↔ (b = zero) → (a = zero) := by
   · intro h1 h2
     rw [h2] at h1
     exact le_zero_eq_zero h1
-  · sorry
+  · intro h1
+    intro h2
+    rw[h2] at h1
+    by_cases h':b=zero
+    · rw[h']
+      symm
+      apply h1
+      exact h'
+    · cases' b with left right
+      · contradiction
+      · rfl
 
 lemma eq_zero_one_iff_le (a b : 𝟚) : (a = zero) ∨ (b = one) ↔ (a ≤ b) := by
   constructor
@@ -129,7 +139,9 @@ instance : Preorder 𝟚 where
 lemma zero_lt_one : zero < one := by
   constructor
   · simp
-  · sorry
+  · intro h
+    dsimp[LE.le] at h
+    contradiction
 
 instance : PartialOrder 𝟚 where
   le_antisymm := by
@@ -146,13 +158,27 @@ instance : PartialOrder 𝟚 where
   | one  => one -- the maximum of `one` and anything else is `one`
   | zero => b -- `zero` does not contribute to the maximum.
 
+lemma max_zero (b: 𝟚) : max zero b = b := by
+  rfl
+
+lemma max_one (a : 𝟚) : max a one = one := by
+  cases' a with left right
+  · rfl
+  · rfl
+
 /-- `a` is less than or equal to the max of `a` and `b` . -/
 theorem le_max_left (a b : 𝟚) : a ≤ max a b := by
-  sorry
+  dsimp [LE.le]
+  intro h1
+  rw [h1]
+  rfl
 
 /-- `b` is less than or equal to the max of `a` and `b` . -/
 theorem le_max_right (a b : 𝟚) : b ≤ max a b := by
-  sorry
+  dsimp [LE.le]
+  intro h
+  rw [h]
+  apply max_one
 
 /-- The max of `a` and `b` is the least upper bound of `a` and `b`. -/
 theorem max_le {a b c : 𝟚} (h1 : a ≤ c) (h2 : b ≤ c) : max a b ≤ c := by
@@ -164,18 +190,52 @@ theorem max_le {a b c : 𝟚} (h1 : a ≤ c) (h2 : b ≤ c) : max a b ≤ c := b
   | zero  => zero
   | one => b
 
-theorem min_respects_le { a b c d : 𝟚 } (h1 : a ≤ c) (h2 : b ≤ d) : min a c ≤ min b d := by
+lemma zero_min (a : 𝟚) : min zero a = zero := by
+  rfl
+
+lemma min_zero (a : 𝟚) : min a zero = zero := by
   cases a
-  · sorry
-  · sorry
+  · rfl
+  · rfl
+
+lemma one_min (a : 𝟚) : min one a = a := by
+  rfl
+
+lemma min_one (a : 𝟚) : min a one = a := by
+  cases a
+  · rfl
+  · rfl
+
+theorem min_respects_le { x y z w : 𝟚 } (h1 : x ≤ y) (h2 : z ≤ w) : min x z ≤ min y w := by
+  cases x
+  · rw [zero_min]
+    apply zero_le
+  · rw [one_min]
+    apply one_le_eq_one at h1
+    rw [h1]
+    rw [one_min]
+    exact h2
 
 /-- `a` is greater than or equal to the min of `a` and `b` . -/
 theorem min_le_left (a b : 𝟚) : min a b ≤ a := by
-  sorry
+  nth_rw 2 [← (min_one a)]
+  apply min_respects_le
+  · rfl
+  · apply le_one
+
+theorem min_le_left' (a b : 𝟚) : min a b ≤ a := by
+  cases' a with left right
+  · rw[zero_min]
+  · rw[one_min]
+    apply le_one
+
 
 /-- `b` is greater than or equal to the min of `a` and `b` . -/
 theorem min_le_right (a b : 𝟚) : min a b ≤ b := by
-  sorry
+  nth_rw 2 [← (one_min b)]
+  apply min_respects_le
+  · apply le_one
+  · rfl
 
 /-- The min of `a` and `b` is the greatest lower bound of `a` and `b`. -/
 theorem le_min {a b c : 𝟚} (h1 : c ≤ a) (h2 : c ≤ b) : c ≤ min a b := by
