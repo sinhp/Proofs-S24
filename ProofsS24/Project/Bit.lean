@@ -42,8 +42,6 @@ lemma zero_ne_one : zero ≠ one := by
 instance : OfNat Bit n where
   ofNat := Bit.ofNat n
 
-#check (0 : Bit)
-
 example : (0 : Bit) = zero := by
   rfl
 
