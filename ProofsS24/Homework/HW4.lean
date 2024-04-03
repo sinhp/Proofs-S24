@@ -20,10 +20,23 @@ open Function
 Let `f : ℤ → ℤ` be the function `f(x) = x + 5`. Prove that there exists a function `g : ℤ → ℤ` such that `(g ∘ f) x = x + 2`.
 -/
 
-example (f : ℤ → ℤ := fun x ↦ x + 5) :
+example (f : ℤ → ℤ) (h : ∀ t, f t = t + 5) :
     ∃ (g : ℤ → ℤ), (g ∘ f) x = x + 2 := by
-  sorry
+    use (fun x ↦ x - 3)
+    --rw [comp_apply]
+    dsimp
+    specialize h x
+    rw [h]
+    ring
 
+example (f : ℤ → ℤ) (h : ∀ t, f t = t + 5) :
+    ∃ (g : ℤ → ℤ), (g ∘ f) x = x + 2 := by
+    use (fun x ↦ x - 3)
+    --rw [comp_apply]
+    dsimp
+    --specialize h x
+    rw [h]
+    ring
 
 /-
 # Problem 2
@@ -107,3 +120,17 @@ theorem eventually_periodic_add {f g : ℕ → M}
   unfold Periodic at *
   simp only [Pi.add_apply]
   sorry
+
+#check Prod.mk.injEq
+
+example (p q r s : α) (h : (p,q) = (r,s)) : p = r ∧ q = s := by
+  aesop
+
+example (p q r s : α) (h : (p,q) = (r,s))  : p = r ∧ q = s := by
+  injection h
+  constructor
+  iterate assumption
+
+example (p q r s : α) (h : (p,q) = (r,s))  : p = r ∧ q = s := by
+  injection h with h1 h2
+  exact ⟨h1, h2⟩
