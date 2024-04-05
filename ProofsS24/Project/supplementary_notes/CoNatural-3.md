@@ -44,7 +44,11 @@ Define the lexicographical order on the cartesian product $\mathbb{N} \times \ma
 
 
 **Exercise**
-Define the lexicographical order on binary sequences. 
+Define the lexicographical order on binary sequences. Explain with concrete instances how this order is different than the pointwise order on binary sequences.
+
+**Exercise**
+In a previous worksheet we introduced the canonical embedding $d \colon \mathbb{N} \hookrightarrow \mathbb{N}[\infty]$. Show that for two natural numbers $m$ and $n$, the binary sequences if $m < n$ then $d(m) < d(n)$ in the lexicographical order, but not with respect to the pointwise order.
+
 
 
 

@@ -29,7 +29,7 @@ $$
 **Exercise** 
 Describe the function $i(n)$ more precisely using a mathematical expression. 
 
-In the second assignment, we associate to $n : \mathbb{N}$ the binary sequence $d(n) : \mathbb{N} \to 2$ consisting of $n$ copies of $1$ followed by $0$s. More precisely, $d(n)$ is defined by $d(n)(m) = 1$ if $m <> n$ and $d(n)(m) = 0$ if $m \geq n$.
+In the second assignment, we associate to $n : \mathbb{N}$ the binary sequence $d(n) : \mathbb{N} \to 2$ consisting of $n$ copies of $1$ followed by $0$s. More precisely, $d(n)$ is defined by $d(n)(m) = 1$ if $m < n$ and $d(n)(m) = 0$ if $m \geq n$.
 
 
 $$
