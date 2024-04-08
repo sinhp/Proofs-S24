@@ -30,6 +30,11 @@ scoped notation "∞" => infinity
 lemma BinSeq_le (α β : ℕ → 𝟚) : α ≤ β ↔ ∀ n, α n ≤ β n := by
   rfl
 
+#check Lex
+
+instance : LE (Lex BinSeq) := sorry
+
+
 -- Since ℕ[∞] is a subtype of the function type `ℕ → 𝟚`, it naturally inherits the order from `ℕ → 𝟚`.
 lemma CoNat_le (α β : ℕ[∞]) : α ≤ β ↔ ∀ n, α.1 n ≤ β.1 n := by
   rfl
@@ -114,8 +119,6 @@ lemma pred_succ (n : ℕ[∞]) : pred (succ n) = n := by
 
 lemma pred_zero : pred 0 = 0 := by
   sorry
-
-
 
 
 

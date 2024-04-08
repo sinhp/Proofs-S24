@@ -26,7 +26,6 @@ def BinSeq := ℕ → Bit
 def binSeqOf (n : ℕ) : BinSeq := fun i => if i < n then one else zero
 
 /-- The constant sequence at zero. -/
-@[simp]
 def zeroSeq : BinSeq := fun _ => zero
 
 /-- `binSeqOf` associates to `0` the constant sequence at zero. -/
@@ -37,7 +36,6 @@ lemma binSeqOf_zero_eq_zeroSeq : binSeqOf 0 = zeroSeq := by
   linarith
 
 /-- The constant sequence at one. -/
-@[simp]
 def oneSeq : BinSeq := fun _ => one
 
 /-- The alteranting sequence that is zero at even indices and one at odd indices. -/
@@ -83,7 +81,19 @@ lemma iff_zero_of_exists_prior_zero {a : ℕ → 𝟚} :
 
 /-- The binary sequence `binSeqOf n` is decreasing. -/
 lemma binSeqOf_decreasing (n : ℕ) : Decreasing (binSeqOf n) := by
-  sorry
+  apply iff_antitone.mpr
+  intro i j hij
+  dsimp [binSeqOf]
+  by_cases h : j < n
+  · rw [if_pos h]
+    rw [if_pos (lt_of_le_of_lt hij h)]
+  · rw [if_neg h]
+    exact Bit.zero_le
+
+
+#check ite
+#check if_pos
+
 
 /-- Given a sequence we construct a decreasing sequence recursively. -/
 def mk (a : ℕ → 𝟚) : ℕ → 𝟚
@@ -102,21 +112,20 @@ lemma mk_succ {a : ℕ → 𝟚} :  (mk a) (n + 1) = min (a (n + 1)) (mk a n) :=
 
 /-- The sequence `mk a` constructed from a sequence `a` is decreasing. -/
 lemma mk_is_decreasing (a : ℕ → 𝟚) : Decreasing (mk a) := by
+  -- unfold Decreasing
   intro n
-  induction n with
-  | zero =>
-    sorry
-  | succ n ih =>
-    sorry
+  -- change (min (a (n + 1)) (mk a n)) ≤ mk a n
+  apply Bit.min_le_right
+
+
+lemma mk_eq_self {a : ℕ → 𝟚} (h : Decreasing a) : mk a = a := by
+  funext n
+  sorry
 
 /-- Decreasing.mk is idempotent. -/
 lemma mk_mk_eq_mk {a : ℕ → 𝟚} : mk (mk a) = mk a := by
-  funext n
-  induction n with
-  | zero =>
-    rfl
-  | succ n ih =>
-    sorry
+  rw [mk_eq_self]
+  exact mk_is_decreasing a
 
 /-- If a sequence `α` is decreasing, then `cons b α` is decreasing for any `b`. -/
 lemma cons (b : Bit) (a : ℕ → 𝟚) (h : Decreasing a) : Decreasing (BinSeq.cons b a) := by
