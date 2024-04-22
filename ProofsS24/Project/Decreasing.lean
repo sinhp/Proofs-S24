@@ -54,7 +54,8 @@ namespace Decreasing
 lemma iff_zero_succ_zero {a : ℕ → 𝟚} :
     Decreasing a ↔ (∀ n, a n = zero → a (n + 1) = zero) := by
   constructor
-  · sorry
+  · intro h n
+    sorry
   · sorry
 
 lemma iff_antitone {a : ℕ → 𝟚} :
@@ -128,8 +129,23 @@ lemma mk_mk_eq_mk {a : ℕ → 𝟚} : mk (mk a) = mk a := by
   exact mk_is_decreasing a
 
 /-- If a sequence `α` is decreasing, then `cons b α` is decreasing for any `b`. -/
-lemma cons (b : Bit) (a : ℕ → 𝟚) (h : Decreasing a) : Decreasing (BinSeq.cons b a) := by
-  sorry
+lemma cons (a : ℕ → 𝟚) (h : Decreasing a) : Decreasing (BinSeq.cons 1 a) := by
+  intro n h'
+  unfold BinSeq.cons
+  cases n with
+  | zero => rw [if_pos rfl]
+            rfl
+  | succ n => rw [if_neg (Nat.succ_ne_zero n)]
+              simp
+              unfold BinSeq.cons at h'
+              rw [if_neg (Nat.succ_ne_zero _)] at h'
+              simp at h'
+              apply h
+              assumption
+
+
+
+
 
 
 
