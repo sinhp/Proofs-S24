@@ -18,6 +18,8 @@ scoped notation "ℕ[∞]" => CoNat
 /-- Every co-natural number has an underlying binary sequence. -/
 def seq (α : ℕ[∞]) : ℕ → 𝟚 := α.1
 
+instance : Coe ℕ[∞] (ℕ → 𝟚) := ⟨seq⟩
+
 instance : Zero ℕ[∞] := ⟨zeroSeq, by intro; rfl⟩
 
 instance : One ℕ[∞] := ⟨oneSeq, by intro; rfl⟩
@@ -25,6 +27,19 @@ instance : One ℕ[∞] := ⟨oneSeq, by intro; rfl⟩
 def infinity : ℕ[∞] := ⟨fun _ => one, by intro; rfl⟩
 
 scoped notation "∞" => infinity
+
+lemma ext {α β : ℕ[∞]} : α = β ↔ α.1 = β.1 := by
+  constructor
+  · intro h
+    rw [h]
+  · intro h
+    rcases α with ⟨α1, hα⟩
+    rcases β with ⟨β1, hβ⟩
+    simp
+    simp at h
+    exact h
+
+
 
 -- Since we have an order on 𝟚, we immediately get an order on the function type ℕ → 𝟚: The order is point-wise meaning that `α ≤ β` iff `α n ≤ β n` for every index `n`.
 lemma BinSeq_le (α β : ℕ → 𝟚) : α ≤ β ↔ ∀ n, α n ≤ β n := by
@@ -92,7 +107,7 @@ lemma injective_ofNat : Injective ofNat := by
 
 /-- The successor function adds `1` to the beginning of the binary sequence. -/
 def succ (n : ℕ[∞]) : ℕ[∞] := match n with
-| ⟨α, h⟩ =>  ⟨BinSeq.cons one α, Decreasing.cons one α h⟩
+| ⟨α, h⟩ =>  ⟨BinSeq.cons one α, Decreasing.cons α h⟩
 
 lemma succ_ofNat (n : ℕ) : succ n = Nat.succ n := by
   simp [succ]
@@ -103,15 +118,43 @@ lemma succ_ofNat (n : ℕ) : succ n = Nat.succ n := by
             sorry
   | succ i => sorry
 
-
 lemma succ_le (n : ℕ[∞]) : n ≤ succ n := by
   sorry
 
-lemma succ_lt (n : ℕ) : n < succ n := by
+lemma succ_ne_zero (n : ℕ[∞]) : succ n ≠ 0 := by
+  intro h
+  apply CoNat.ext.mp at h
+  apply Bit.zero_ne_one
+  symm
+  apply congr_fun h 0
+
+lemma succ_ne_self (n : ℕ) : succ n ≠ n := by
+  intro h
+  apply CoNat.ext.mp at h
+  apply Bit.zero_ne_one
+  symm
+  simp [succ] at h
+  have : (BinSeq.cons one (ofNat n).1) n = 1 := by
+    simp [BinSeq.cons]
+    by_cases h' : n = 0
+    · rw [if_pos h']
+      rfl
+    · rw [if_neg h']
+      simp [ofNat, binSeqOf]
+      rw [if_pos]
+      rfl
+      sorry
+  --apply congr_fun h n
   sorry
 
-lemma succ_ne_zero (n : ℕ[∞]) : succ n ≠ 0 := by
-  sorry
+example (n : ℕ) : n < Nat.succ n := by
+  linarith
+
+lemma succ_lt (n : ℕ) : n < succ n := by
+  apply lt_of_le_of_ne
+  · apply succ_le
+  · symm
+    apply succ_ne_self
 
 lemma succ_pos (n : ℕ[∞]) : 0 < succ n := by
   sorry
