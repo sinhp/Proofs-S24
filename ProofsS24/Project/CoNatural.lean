@@ -55,6 +55,11 @@ def ofBinSeq (β : ℕ → 𝟚) : ℕ[∞] := ⟨Decreasing.mk β, Decreasing.m
 
 @[simp]
 lemma ofBinSeq_left_inverse (α : ℕ[∞]) : ofBinSeq α = α := by
+  cases' α with a h
+  simp only [Subtype.mk.injEq]
+  ext x
+  -- dsimp [OfBinSeq]
+  -- apply mk_eq_self
   sorry
 
 lemma left_inverse  : LeftInverse CoNat.ofBinSeq CoNat.seq := by
@@ -68,7 +73,22 @@ def ofNat (n : ℕ) : ℕ[∞] :=  ⟨binSeqOf n, binSeqOf_decreasing n⟩
 instance coe : Coe ℕ ℕ[∞] := ⟨ofNat⟩
 
 lemma injective_ofNat : Injective ofNat := by
-  sorry
+  intro m n h
+  simp only [ofNat, Subtype.mk.injEq] at h
+  unfold binSeqOf at h
+  cases' (lt_trichotomy m n) with h₁ h₂
+  · exfalso
+    have h' := congr_fun h m
+    rw [if_pos h₁] at h'
+    rw [if_neg (Nat.lt_irrefl m)] at h'
+    simp only [Bit.zero_ne_one h']
+  · cases' h₂ with h₃ h₄
+    · assumption
+    · exfalso
+      have h' := congr_fun h n
+      rw [if_pos h₄] at h'
+      rw [if_neg (Nat.lt_irrefl n)] at h'
+      simp only [Bit.zero_ne_one h'.symm]
 
 /-- The successor function adds `1` to the beginning of the binary sequence. -/
 def succ (n : ℕ[∞]) : ℕ[∞] := match n with
@@ -76,9 +96,13 @@ def succ (n : ℕ[∞]) : ℕ[∞] := match n with
 
 lemma succ_ofNat (n : ℕ) : succ n = Nat.succ n := by
   simp [succ]
-  ext x
+  ext i
   dsimp
-  sorry
+  cases i with
+  | zero => simp
+            sorry
+  | succ i => sorry
+
 
 lemma succ_le (n : ℕ[∞]) : n ≤ succ n := by
   sorry
@@ -119,7 +143,6 @@ lemma pred_succ (n : ℕ[∞]) : pred (succ n) = n := by
 
 lemma pred_zero : pred 0 = 0 := by
   sorry
-
 
 
 end CoNat
